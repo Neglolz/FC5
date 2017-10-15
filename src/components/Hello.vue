@@ -1,17 +1,17 @@
 <template>
   <div class="hello">
-    <h1>{{ msg }}</h1>
-
     <div class="terrain">
       <div class="cell" v-for="cell in terrain">
-        <div v-if="cell.isBallon === 'true'">
-          O
+
+        <div :class="{isBallon: cell.isBallon}" v-if="cell.isBallon === 'true'">
+           .
         </div>
-        <div v-else> - </div>
+
       </div>
     </div>
     <button @click="shoot">Tirer</button>
-    <button @click="pass('he')">Passer</button>
+    <input type="number" v-model="ball.position">
+    <button @click="dribble">dribble</button>
     <button @click="test">JSON</button>
   </div>
 </template>
@@ -25,8 +25,12 @@
     data () {
       return {
         msg: 'Welcome to Your Vue.js App',
-        wTerrain: 9,
-        hTerrain: 10,
+        wTerrain: 7,
+        hTerrain: 9,
+        ball: {
+            position: 45,
+            possessor: '1'
+        },
         terrain: Object
       }
     },
@@ -38,7 +42,8 @@
         cible ? console.log(cible) : console.log('choisir une cible');
       },
       dribble(){
-        console.log('ballon.pos +1')
+        this.ball.position ++
+        this.createTerrain( this.ball.position )
       },
       // generation du json terrain. Prend en parametre un strin position du ballon
       // un tableau de string position des joueurs du user1 + user2
@@ -47,7 +52,6 @@
           let jsonData = '{';
           for( let x = 1 ; x <= this.wTerrain ; x++ ){
             for( let y = 1 ; y <= this.hTerrain ; y++ ){
-              //console.log(x,y);
               jsonData += '"'+ x.toString()+y.toString() +'":{' ;
               jsonData += '"name": "' + x.toString()+y.toString() +'",';
               (posBallon.toString() === x.toString()+y.toString()) ? jsonData+='"isBallon":"true"' : jsonData+='"isBallon":"false"' ;
@@ -57,19 +61,22 @@
             }
           }
           jsonData += '}'
-          console.log(jsonData)
           jsonData = JSON.parse(jsonData)
-          console.log(typeof(jsonData))
           this.terrain= jsonData
-         // return JSON.parse(JSON.stringify(jsonData))
       },
       test(value){
-        this.createTerrain('12')
+        this.createTerrain(this.ball.position)
         //console.log(this.terrain)
+      },
+      createBallon(posBallon){
+          this.ball.position =  posBallon ;
       }
     },
     mounted(){
         this.terrain = this.createTerrain('12')
+    },
+    watcher:{
+
     }
   }
 </script>
@@ -96,12 +103,29 @@
 
   .cell {
     display: block;
+    background-color: #23BF4B;
+    background-repeat: no-repeat ;
     width: 50px;
+    height: 50px;
     float: left;
-    border: 1px solid black;
+    border: 1px solid white;
+  }
+
+  .cliquable{
+    cursor: pointer;
+  }
+
+  .isBallon{
+    background-image: url("./../assets/ball32.png");
+  }
+  .isBallon1joueur{
+    background-image: url("./../assets/ball24.png");
+  }
+  .isBallon2joueur{
+    background-image: url("./../assets/ball24.png");
   }
 
   .terrain {
-    width: 450px;
+    width: 400px;
   }
 </style>
