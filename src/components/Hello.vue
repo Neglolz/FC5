@@ -1,5 +1,6 @@
 <template>
   <div class="hello">
+
     <div class="terrain">
       <div class="cell" v-for="cell in terrain">
 
@@ -13,6 +14,7 @@
     <input type="number" v-model="ball.position">
     <button @click="dribble">dribble</button>
     <button @click="test">JSON</button>
+    <h2>{{player1.score}} - {{player2.score}}</h2>
   </div>
 </template>
 
@@ -31,12 +33,30 @@
             position: 45,
             possessor: '1'
         },
-        terrain: Object
+        terrain: Object,
+        player1:{
+            score: 0
+        },
+        player2:{
+            score: 0
+        },
+        playingPlayer: 1,
       }
     },
     methods: {
       shoot(){
-        console.log('shoot')
+          if( this.playingPlayer === 1 ){
+            this.ball.position = 14
+            this.player1.score ++
+            this.playingPlayer ++
+          }else{
+            this.ball.position = 49
+            this.player2.score ++
+            this.playingPlayer --
+          }
+        //(this.playingPlayer === 1) ? this.ball.position = 14: this.ball.position = 94;
+        //(this.playingPlayer === 1) ? this.player1.score ++ : this.player2.score ++;
+        this.createTerrain(this.ball.position)
       },
       pass(cible){
         cible ? console.log(cible) : console.log('choisir une cible');
@@ -45,9 +65,7 @@
         this.ball.position ++
         this.createTerrain( this.ball.position )
       },
-      // generation du json terrain. Prend en parametre un strin position du ballon
-      // un tableau de string position des joueurs du user1 + user2
-      createTerrain( posBallon){
+      createTerrain(posBallon){
           // , posJoueursUser1, posjoueursUser2
           let jsonData = '{';
           for( let x = 1 ; x <= this.wTerrain ; x++ ){
@@ -72,8 +90,8 @@
           this.ball.position =  posBallon ;
       }
     },
-    mounted(){
-        this.terrain = this.createTerrain('12')
+    created(){
+        this.createTerrain(this.ball.position);
     },
     watcher:{
 
