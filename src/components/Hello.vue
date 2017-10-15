@@ -3,9 +3,11 @@
     <h1>{{ msg }}</h1>
 
     <div class="terrain">
-      {{terrain}}
-      <div v-for="Cell in terrain">
-        o
+      <div class="cell" v-for="cell in terrain">
+        <div v-if="cell.isBallon === 'true'">
+          O
+        </div>
+        <div v-else> - </div>
       </div>
     </div>
     <button @click="shoot">Tirer</button>
@@ -23,8 +25,8 @@
     data () {
       return {
         msg: 'Welcome to Your Vue.js App',
-        wTerrain: 2,
-        hTerrain: 3,
+        wTerrain: 9,
+        hTerrain: 10,
         terrain: Object
       }
     },
@@ -46,7 +48,7 @@
           for( let x = 1 ; x <= this.wTerrain ; x++ ){
             for( let y = 1 ; y <= this.hTerrain ; y++ ){
               //console.log(x,y);
-              jsonData += '{' ;
+              jsonData += '"'+ x.toString()+y.toString() +'":{' ;
               jsonData += '"name": "' + x.toString()+y.toString() +'",';
               (posBallon.toString() === x.toString()+y.toString()) ? jsonData+='"isBallon":"true"' : jsonData+='"isBallon":"false"' ;
 
@@ -55,8 +57,9 @@
             }
           }
           jsonData += '}'
-          console.log(JSON.parse(JSON.stringify(jsonData)))
-          jsonData = JSON.parse(JSON.stringify(jsonData))
+          console.log(jsonData)
+          jsonData = JSON.parse(jsonData)
+          console.log(typeof(jsonData))
           this.terrain= jsonData
          // return JSON.parse(JSON.stringify(jsonData))
       },
