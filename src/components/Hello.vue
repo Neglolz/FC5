@@ -3,11 +3,12 @@
 
     <div class="terrain">
       <div class="cell" v-for="cell in terrain">
-
-        <div :class="{isBallon: cell.isBallon}" v-if="cell.isBallon === 'true'">
-           .
+        <div :class="{ isBallon: cell.isBallon }" v-if="cell.isBallon === 'true'">
+          o
         </div>
-
+        <div v-else>
+          {{ cell.name }}
+        </div>
       </div>
     </div>
     <button @click="shoot">Tirer</button>
@@ -33,7 +34,24 @@
             position: 45,
             possessor: '1'
         },
-        terrain: Object,
+        terrain: [
+          {"name": "11","isBallon":"false"},
+          {"name": "21","isBallon":"false"},
+          {"name": "31","isBallon":"false"},
+          {"name": "41","isBallon":"false"},
+          {"name": "51","isBallon":"false"},
+          {"name": "61","isBallon":"false"},
+          {"name": "71","isBallon":"false"}
+        ],
+        terrainTest:[
+          {"name": "11","isBallon":"false"},
+          {"name": "21","isBallon":"false"},
+          {"name": "31","isBallon":"false"},
+          {"name": "41","isBallon":"false"},
+          {"name": "51","isBallon":"false"},
+          {"name": "61","isBallon":"false"},
+          {"name": "71","isBallon":"false"}
+        ],
         player1:{
             score: 0
         },
@@ -46,7 +64,7 @@
     methods: {
       shoot(){
           if( this.playingPlayer === 1 ){
-            this.ball.position = 14
+            this.ball.position = 41
             this.player1.score ++
             this.playingPlayer ++
           }else{
@@ -66,21 +84,38 @@
         this.createTerrain( this.ball.position )
       },
       createTerrain(posBallon){
+          this.terrain = [];
           // , posJoueursUser1, posjoueursUser2
-          let jsonData = '{';
-          for( let x = 1 ; x <= this.wTerrain ; x++ ){
+          //let jsonData = '[';
             for( let y = 1 ; y <= this.hTerrain ; y++ ){
-              jsonData += '"'+ x.toString()+y.toString() +'":{' ;
-              jsonData += '"name": "' + x.toString()+y.toString() +'",';
-              (posBallon.toString() === x.toString()+y.toString()) ? jsonData+='"isBallon":"true"' : jsonData+='"isBallon":"false"' ;
+              for( let x = 1 ; x <= this.wTerrain ; x++ ){
+              //jsonData += '"'+ y.toString() + x.toString() +'":{' ;
+              let jsonData = {
+                  name: String,
+                  isBallon: String
+              };
+              console.log( x , y)
+              jsonData.name = '' + x.toString() + y.toString() +'';
+              if(posBallon.toString() === x.toString() + y.toString()){
+                jsonData.isBallon = 'true'
+              }else{
+                jsonData.isBallon = 'false'
+              }
+              //(posBallon.toString() === x.toString() + y.toString()) ? jsonData.isballon = 'true' : jsonData.isballon = 'false' ;
 
 
-              (y === this.hTerrain  && x === this.wTerrain) ? jsonData+='}' : jsonData+='},' ;
+              //jsonData = '{ name: "' + y.toString() + x.toString() +'",';
+              //(posBallon.toString() === y.toString() + x.toString()) ? jsonData+='isBallon:true' : jsonData+='isBallon:false' ;
+
+
+              //(y === this.hTerrain  && x === this.wTerrain) ? jsonData+='}' : jsonData+='},' ;
+              this.terrain.push(jsonData);
             }
           }
-          jsonData += '}'
-          jsonData = JSON.parse(jsonData)
-          this.terrain= jsonData
+          //jsonData += ']'
+          //console.log(jsonData)
+          //jsonData = JSON.parse(jsonData)
+          //this.terrain = jsonData
       },
       test(value){
         this.createTerrain(this.ball.position)
@@ -123,8 +158,8 @@
     display: block;
     background-color: #23BF4B;
     background-repeat: no-repeat ;
-    width: 50px;
-    height: 50px;
+    width: 49px;
+    height: 49px;
     float: left;
     border: 1px solid white;
   }
