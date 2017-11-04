@@ -1,6 +1,6 @@
 <template>
   <div class="hello">
-    Joueur actuel: <h2>{{ playingPlayer }}</h2>
+    Joueur actuel: <h2>{{ playingUser }}</h2>
     <div class="terrain">
       <div class="cell" v-for="cell in terrain">
         <div v-if="cell.isBallon === 'true'">
@@ -8,6 +8,9 @@
         </div>
         <div v-else>
           {{ cell.name }}
+          <div v-if="cell.user1.isPlayer == 1">
+            <img src="./../assets/player32.png">
+          </div>
         </div>
       </div>
     </div>
@@ -15,7 +18,7 @@
     <input type="number" v-model="ball.position">
     <button @click="dribble">dribble</button>
     <button @click="test">JSON</button>
-    <h2>{{player1.score}} - {{player2.score}}</h2>
+    <h2>{{User1.score}} - {{User2.score}}</h2>
     journal d'évenement: <br>
     <div v-for="event in events">
       {{ event.description }}
@@ -24,6 +27,7 @@
 </template>
 
 <script>
+  import _ from 'lodash'
   export default {
     name: 'hello',
     props: {
@@ -39,111 +43,153 @@
           { id:0, description: 'test1' },
           { id:0, description: 'test2' },*/
         ],
-        event: {
-          id: Number,
-          description: String
-        },
         ball: {
           position: 45,
           possessor: '1'
         },
-        terrain: [],
-        terrainTest: [],
-        player1: {
-          score: 0
+        terrain: [ ],
+        User1: {
+          score: 0,
+          players:{
+            player1: {
+              position: 49,
+              stats: {
+                  atq: 10,
+                  def: 90
+              }
+            },
+            player2: {
+              position: 58,
+              stats: {
+                atq: 10,
+                def: 90
+              }
+            },
+            player3: {
+              position: 38,
+              stats: {
+                atq: 10,
+                def: 90
+              }
+            },
+            player4: {
+              position: 17,
+              stats: {
+                atq: 10,
+                def: 90
+              }
+            },
+            player5: {
+              position: 77,
+              stats: {
+                atq: 10,
+                def: 90
+              }
+            },
+            player6: {
+              position: 36,
+              stats: {
+                atq: 10,
+                def: 90
+              }
+            },
+            player7: {
+              position: 56,
+              stats: {
+                atq: 10,
+                def: 90
+              }
+            },
+            player8: {
+              position: 15,
+              stats: {
+                atq: 10,
+                def: 90
+              }
+            },
+            player9: {
+              position: 75,
+              stats: {
+                atq: 10,
+                def: 90
+              }
+            },
+            player10: {
+              position: 32,
+              stats: {
+                atq: 10,
+                def: 90
+              }
+            },
+            player11: {
+              position: 52,
+              stats: {
+                atq: 10,
+                def: 90
+              }
+            },
+          }
         },
-        player2: {
-          score: 0
+        User2: {
+          score: 0,
+          player:[ ]
         },
-        playingPlayer: 1,
+        playingUser: 1
       }
     },
     methods: {
 
       shoot() {
         this.checkIfGoal();
-        /*if (this.playingPlayer === 1) {
-          this.ball.position = 41
-          this.player1.score++
-          this.playingPlayer = 2
-        } else {
-          this.ball.position = 49
-          this.player2.score++
-          this.playingPlayer = 1
-        }*/
-        //(this.playingPlayer === 1) ? this.ball.position = 14: this.ball.position = 94;
-        //(this.playingPlayer === 1) ? this.player1.score ++ : this.player2.score ++;
         this.createTerrain(this.ball.position)
       },
 
+      createEvent(description){
+        const event = {
+          id: Math.floor(Math.random()*1000000000),
+            description: description
+        }
+        this.events.push(event)
+      },
+
       checkIfGoal(){
-        let posTarget;
+        let posTarget = this.playingUser === 1 ? 41 : 49 ;
         let distanceToTarget;
-        ( this.playingPlayer === 1 ) ? posTarget = 41 : posTarget = 49 ;
+        ( this.playingUser === 1 ) ? posTarget = 41 : posTarget = 49 ;
         distanceToTarget = posTarget - this.ball.position;
 
         let resultShoot =  Math.abs(Math.random()*100);
         if( resultShoot >= 80 ){ // but
-          if (this.playingPlayer === 1) {
-            this.player1.score++
-
-            let goalEvent = {
-              id: Math.floor(Math.random()*1000000000),
-              description: 'GOOOAAAAAAL'
-            }
-            this.events.push(goalEvent)
-
-            this.playingPlayer = 2
+          if (this.playingUser === 1) {
+            this.User1.score++
+            this.createEvent('GOOOAAAAAL')
+            this.playingUser = 2
           } else {
-            this.player2.score++
-
-            let goalEvent = {
-              id: Math.floor(Math.random()*1000000000),
-              description: 'GOOOAAAAAAL'
-            }
-            this.events.push(goalEvent)
-
-            this.playingPlayer = 1
+            this.User2.score++
+            this.createEvent('GOOOAAAAAL')
+            this.playingUser = 1
           }
           this.ball.position = 45
 
         }else if(resultShoot > 30 && resultShoot < 80){ // 6 metres
-          if (this.playingPlayer === 1) {
+          if (this.playingUser === 1) {
             this.ball.position = 41
 
-            let goalEvent = {
-              id: Math.floor(Math.random()*1000000000),
-              description: '6 mètres'
-            }
-            this.events.push(goalEvent)
+            this.createEvent('6 mètres')
 
-            this.playingPlayer = 2
+            this.playingUser = 2
           } else {
             this.ball.position = 49
-
-            let goalEvent = {
-              id: Math.floor(Math.random()*1000000000),
-              description: '6 mètres'
-            }
-            this.events.push(goalEvent)
-
-            this.playingPlayer = 1
+            this.createEvent('6 mètres')
+            this.playingUser = 1
           }
         }else{ //corner
-          if (this.playingPlayer === 1) {
+          if (this.playingUser === 1) {
             this.ball.position = 71
-            let goalEvent = {
-              id: Math.floor(Math.random()*1000000000),
-              description: 'Corner'
-            }
-            this.events.push(goalEvent)
+            this.createEvent('corner')
           } else {
             this.ball.position = 19
-            let goalEvent = {
-              id: Math.floor(Math.random()*1000000000),
-              description: 'Corner'
-            }
-            this.events.push(goalEvent)
+            this.createEvent('corner')
           }
         }
       },
@@ -161,7 +207,7 @@
       },
 
       tryDribble(posBallon){
-        ( this.playingPlayer === 1 ) ? posBallon -- : posBallon ++;
+        ( this.playingUser === 1 ) ? posBallon -- : posBallon ++;
 
         let goalEvent = {
           id: Math.floor(Math.random()*1000000000),
@@ -172,38 +218,48 @@
         return posBallon
       },
 
-      createTerrain(posBallon) {
-        this.terrain = [];
-        // , posJoueursUser1, posjoueursUser2
-        //let jsonData = '[';
+      createTerrain(posBallon,posJoueursUser1,posJoueursUser2) {
+        this.terrain = [ ];
         for (let y = 1; y <= this.hTerrain; y++) {
           for (let x = 1; x <= this.wTerrain; x++) {
-            //jsonData += '"'+ y.toString() + x.toString() +'":{' ;
-            let jsonData = {
-              name: String,
-              isBallon: String
+
+            const jsonData = {
+              name: '',
+              isBallon: '',
+              isPlayer: '',
+              user1: {
+                player:{ },
+                isPlayer: 0
+              },
+              user2:{
+                player:{ },
+                isPlayer: 0
+              }
             };
+
             jsonData.name = '' + x.toString() + y.toString() + '';
+
             if (posBallon.toString() === x.toString() + y.toString()) {
               jsonData.isBallon = 'true'
             } else {
               jsonData.isBallon = 'false'
             }
-            //(posBallon.toString() === x.toString() + y.toString()) ? jsonData.isballon = 'true' : jsonData.isballon = 'false' ;
 
+            let numberCurrentCell = x *10 + y;
 
-            //jsonData = '{ name: "' + y.toString() + x.toString() +'",';
-            //(posBallon.toString() === y.toString() + x.toString()) ? jsonData+='isBallon:true' : jsonData+='isBallon:false' ;
+            let posJoueurUser1 = _.findKey(posJoueursUser1, { 'position': numberCurrentCell });
+            let posJoueurUser2 = _.findKey(posJoueursUser2, { 'position': numberCurrentCell });
 
+            console.log(posJoueurUser1, numberCurrentCell)
 
-            //(y === this.hTerrain  && x === this.wTerrain) ? jsonData+='}' : jsonData+='},' ;
+            if ( posJoueurUser1 !== undefined ){
+              jsonData.user1.player = posJoueurUser1;
+              jsonData.user1.isPlayer = 1;
+            }
+
             this.terrain.push(jsonData);
           }
         }
-        //jsonData += ']'
-        //console.log(jsonData)
-        //jsonData = JSON.parse(jsonData)
-        //this.terrain = jsonData
       },
 
       test(value) {
@@ -222,7 +278,7 @@
             break;
           case 50:
             return 44
-            this.changePlayingPlayer()
+            this.changeplayingUser()
             break;
           case 49:
             this.shoot()
@@ -230,16 +286,16 @@
         }
       },
 
-      changePlayingPlayer(){
-        if(this.playingPlayer ===1){
-          this.playingPlayer = 2
+      changeplayingUser(){
+        if(this.playingUser ===1){
+          this.playingUser = 2
         }else{
-          this.playingPlayer = 1
+          this.playingUser = 1
         }
       }
     },
     created() {
-      this.createTerrain(this.ball.position);
+      this.createTerrain(this.ball.position, this.User1.players,this.User2.players);
     },
     computed: {
 
