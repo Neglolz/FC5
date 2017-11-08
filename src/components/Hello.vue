@@ -3,7 +3,8 @@
     Joueur actuel:
     <div v-if="playingUser ===1">
       <img src="./../assets/player132.png">
-    </div><div v-else=""> <img src="./../assets/player232.png"> </div>
+    </div>
+    <div v-else=""><img src="./../assets/player232.png"></div>
     <h2>{{ playingUser }}</h2>
     <div class="terrain">
       <div class="cell" v-for="cell in terrain">
@@ -13,10 +14,10 @@
         <div v-else>
           <!--{{ cell.name }}-->
         </div>
-        <div class="user2" v-if="cell.user2.isPlayer == 1">
+        <div class="user2" v-if="cell.user2.isPlayer == 1" @click="pass(cell.user2.player)">
           <img src="./../assets/player216.png">
         </div>
-        <div class="user1" v-if="cell.user1.isPlayer == 1">
+        <div class="user1" v-if="cell.user1.isPlayer == 1" @click="pass(cell.user1.player)">
           <img src="./../assets/player116.png">
         </div>
       </div>
@@ -37,32 +38,30 @@
   import _ from 'lodash'
   export default {
     name: 'hello',
-    props: {
-
-    },
+    props: {},
     data() {
       return {
         msg: 'Welcome to Your Vue.js App',
         wTerrain: 7,
         hTerrain: 9,
-        events:[
+        events: [
           /*{ id:34567878, description: 'test' },
-          { id:0, description: 'test1' },
-          { id:0, description: 'test2' },*/
+           { id:0, description: 'test1' },
+           { id:0, description: 'test2' },*/
         ],
         ball: {
           position: 45,
           possessor: '1'
         },
-        terrain: [ ],
+        terrain: [],
         User1: {
           score: 0,
-          players:{
+          players: {
             player1: {
               position: 49,
               stats: {
-                  atq: 10,
-                  def: 90
+                atq: 10,
+                def: 90
               }
             },
             player2: {
@@ -225,26 +224,30 @@
     methods: {
 
       shoot() {
+        if(this.checkIfPlayer() === false){
+            this.createEvent('Impossible de tirer sans joueur')
+            return false
+        }
         this.checkIfGoal();
         this.createTerrain(this.ball.position, this.User1.players, this.User2.players)
       },
 
       createEvent(description){
         const event = {
-          id: Math.floor(Math.random()*1000000000),
-            description: description
+          id: Math.floor(Math.random() * 1000000000),
+          description: description
         }
         this.events.push(event)
       },
 
       checkIfGoal(){
-        let posTarget = this.playingUser === 1 ? 41 : 49 ;
+        let posTarget = this.playingUser === 1 ? 41 : 49;
         let distanceToTarget;
-        ( this.playingUser === 1 ) ? posTarget = 41 : posTarget = 49 ;
+        ( this.playingUser === 1 ) ? posTarget = 41 : posTarget = 49;
         distanceToTarget = posTarget - this.ball.position;
 
-        let resultShoot =  Math.abs(Math.random()*100);
-        if( resultShoot >= 80 ){ // but
+        let resultShoot = Math.abs(Math.random() * 100);
+        if (resultShoot >= 80) { // but
           if (this.playingUser === 1) {
             this.User1.score++
             this.createEvent('GOOOAAAAAL')
@@ -256,7 +259,7 @@
           }
           this.ball.position = 45
 
-        }else if(resultShoot > 30 && resultShoot < 80){ // 6 metres
+        } else if (resultShoot > 30 && resultShoot < 80) { // 6 metres
           if (this.playingUser === 1) {
             this.ball.position = 41
 
@@ -268,7 +271,7 @@
             this.createEvent('6 mètres')
             this.playingUser = 1
           }
-        }else{ //corner
+        } else { //corner
           if (this.playingUser === 1) {
             this.ball.position = 71
             this.createEvent('corner')
@@ -279,23 +282,73 @@
         }
       },
 
+      checkIfPlayer(){
+        if (this.playingUser === 1){
+          let result = _.findKey(this.User1.players, {'position': this.ball.position});
+          console.log(this.ball.position)
+          if(result === undefined){
+              return false
+          }else{
+              return true
+          }
+        } else{
+          let result = _.findKey(this.User2.players, {'position': this.ball.position});
+          if(result === undefined){
+            return false
+          }else{
+            return true
+          }
+        }
+
+      },
+
       pass(cible) {
-        cible ? console.log(cible) : console.log('choisir une cible');
+        this.ball.position = cible;
+        this.createTerrain(cible, this.User1.players, this.User2.players)
       },
 
       dribble() {
+        if(this.checkIfPlayer() === false){
+          this.createEvent('Impossible de dribbler sans joueur')
+          return false
+        }
+        this.movePlayer()
+
         var posBallon = this.ball.position;
         //posBallon = this.checkLimiteTerrainBallon(posBallon);
         posBallon = this.tryDribble(posBallon)
         this.ball.position = posBallon
-        this.createTerrain(this.ball.position,this.User1.players, this.User2.players)
+        this.createTerrain(this.ball.position, this.User1.players, this.User2.players)
+      },
+
+      movePlayer(){
+        let posBallon = this.ball.position;
+
+        if (this.playingUser === 1){
+          let joueur = _.findKey(this.User1.players, {'position': posBallon});
+          if(joueur === undefined){
+            return false
+          }else{
+            this.User1.players[joueur].position --
+            return true
+          }
+        } else{
+          let joueur = _.findKey(this.User2.players, {'position': posBallon});
+          if(joueur === undefined){
+            return false
+          }else{
+            this.User2.players[joueur].position ++
+            return true
+          }
+        }
+
       },
 
       tryDribble(posBallon){
-        ( this.playingUser === 1 ) ? posBallon -- : posBallon ++;
+        ( this.playingUser === 1 ) ? posBallon-- : posBallon++;
 
         let goalEvent = {
-          id: Math.floor(Math.random()*1000000000),
+          id: Math.floor(Math.random() * 1000000000),
           description: 'Dribble réussi'
         }
         this.events.push(goalEvent)
@@ -303,8 +356,8 @@
         return posBallon
       },
 
-      createTerrain(posBallon,posJoueursUser1,posJoueursUser2) {
-        this.terrain = [ ];
+      createTerrain(posBallon, posJoueursUser1, posJoueursUser2) {
+        this.terrain = [];
         for (let y = 1; y <= this.hTerrain; y++) {
           for (let x = 1; x <= this.wTerrain; x++) {
 
@@ -313,11 +366,11 @@
               isBallon: 0,
               isPlayer: 0,
               user1: {
-                player:{ },
+                player: {},
                 isPlayer: 0
               },
-              user2:{
-                player:{ },
+              user2: {
+                player: {},
                 isPlayer: 0
               }
             };
@@ -330,20 +383,19 @@
               jsonData.isBallon = 0
             }
 
-            let numberCurrentCell = x *10 + y;
+            let numberCurrentCell = x * 10 + y;
 
-            let posJoueurUser1 = _.findKey(posJoueursUser1, { 'position': numberCurrentCell });
-            let posJoueurUser2 = _.findKey(posJoueursUser2, { 'position': numberCurrentCell });
+            let posJoueurUser1 = _.findKey(posJoueursUser1, {'position': numberCurrentCell});
+            let posJoueurUser2 = _.findKey(posJoueursUser2, {'position': numberCurrentCell});
 
 
-
-            if ( posJoueurUser1 !== undefined ){
-              jsonData.user1.player = posJoueurUser1;
+            if (posJoueurUser1 !== undefined) {
+              jsonData.user1.player = numberCurrentCell;
               jsonData.user1.isPlayer = 1;
               jsonData.isPlayer = 1
             }
-            if ( posJoueurUser2 !== undefined ){
-              jsonData.user2.player = posJoueurUser1;
+            if (posJoueurUser2 !== undefined) {
+              jsonData.user2.player = numberCurrentCell;
               jsonData.user2.isPlayer = 1;
               jsonData.isPlayer = 1
             }
@@ -355,7 +407,7 @@
       },
 
       test(value) {
-        this.createTerrain(this.ball.position,this.User1.players, this.User2.players)
+        this.createTerrain(this.ball.position, this.User1.players, this.User2.players)
       },
 
       createBallon(posBallon) {
@@ -378,24 +430,24 @@
       },
 
       changePlayingUser(){
-        if(this.playingUser ===1){
+        if (this.playingUser === 1) {
           this.playingUser = 2
-        }else{
+        } else {
           this.playingUser = 1
         }
       },
 
       reverseUserPlayers(players){
-          for( const p in players){
-              let player = players[p]
-              player.position = this.reversePosition(player.position)
-          }
-          return players
+        for (const p in players) {
+          let player = players[p]
+          player.position = this.reversePosition(player.position)
+        }
+        return players
       },
 
       reversePosition(position){
-        let positionVerticale = parseInt(position.toString().substr(1,1))
-        let positionHorizontale = parseInt(position.toString().substr(0,1)) *10
+        let positionVerticale = parseInt(position.toString().substr(1, 1))
+        let positionHorizontale = parseInt(position.toString().substr(0, 1)) * 10
         positionVerticale = Math.abs(positionVerticale - 10)
         position = positionHorizontale + positionVerticale
         return position
@@ -405,9 +457,7 @@
       this.User2.players = this.reverseUserPlayers(this.User2.players)
       this.createTerrain(this.ball.position, this.User1.players, this.User2.players);
     },
-    computed: {
-
-    }
+    computed: {}
   }
 </script>
 
@@ -434,37 +484,43 @@
   .cell {
     display: block;
     background-color: #23BF4B;
-    background-repeat: no-repeat ;
+    background-repeat: no-repeat;
     width: 49px;
     height: 49px;
     float: left;
     border: 1px solid white;
   }
 
-  .cliquable{
+  .cliquable {
     cursor: pointer;
   }
 
-  .isBallon{
+  .isBallon {
     justify-content: center;
     cursor: pointer;
   }
-  .isBallon1joueur{
+
+  .isBallon1joueur {
     background-image: url("./../assets/ball24.png");
   }
-  .isBallon2joueur{
+
+  .isBallon2joueur {
     background-image: url("./../assets/ball24.png");
   }
 
   .terrain {
     width: 400px;
   }
-  .user1{
+
+  .user1 {
     justify-content: center;
     margin-top: 20%; /*temp*/
+    cursor: pointer;
   }
-  .user2{
+
+  .user2 {
     justify-content: center;
     transform: rotate(180deg);
+    cursor: pointer;
   }
 </style>
