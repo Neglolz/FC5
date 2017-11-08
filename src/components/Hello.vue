@@ -1,16 +1,23 @@
 <template>
   <div class="hello">
-    Joueur actuel: <h2>{{ playingUser }}</h2>
+    Joueur actuel:
+    <div v-if="playingUser ===1">
+      <img src="./../assets/player132.png">
+    </div><div v-else=""> <img src="./../assets/player232.png"> </div>
+    <h2>{{ playingUser }}</h2>
     <div class="terrain">
       <div class="cell" v-for="cell in terrain">
-        <div v-if="cell.isBallon === 'true'">
-          <img class="isBallon" src="./../assets/ball32.png">
+        <div class="isBallon" v-if="cell.isBallon === 1">
+          <img src="./../assets/ball24.png">
         </div>
         <div v-else>
-          {{ cell.name }}
-          <div v-if="cell.user1.isPlayer == 1">
-            <img src="./../assets/player32.png">
-          </div>
+          <!--{{ cell.name }}-->
+        </div>
+        <div class="user2" v-if="cell.user2.isPlayer == 1">
+          <img src="./../assets/player216.png">
+        </div>
+        <div class="user1" v-if="cell.user1.isPlayer == 1">
+          <img src="./../assets/player116.png">
         </div>
       </div>
     </div>
@@ -39,7 +46,7 @@
         wTerrain: 7,
         hTerrain: 9,
         events:[
-          /*{ id:0, description: 'test' },
+          /*{ id:34567878, description: 'test' },
           { id:0, description: 'test1' },
           { id:0, description: 'test2' },*/
         ],
@@ -56,6 +63,88 @@
               stats: {
                   atq: 10,
                   def: 90
+              }
+            },
+            player2: {
+              position: 58,
+              stats: {
+                atq: 10,
+                def: 90
+              }
+            },
+            player3: {
+              position: 38,
+              stats: {
+                atq: 10,
+                def: 90
+              }
+            },
+            player4: {
+              position: 17,
+              stats: {
+                atq: 10,
+                def: 90
+              }
+            },
+            player5: {
+              position: 77,
+              stats: {
+                atq: 10,
+                def: 90
+              }
+            },
+            player6: {
+              position: 35,
+              stats: {
+                atq: 10,
+                def: 90
+              }
+            },
+            player7: {
+              position: 55,
+              stats: {
+                atq: 10,
+                def: 90
+              }
+            },
+            player8: {
+              position: 14,
+              stats: {
+                atq: 10,
+                def: 90
+              }
+            },
+            player9: {
+              position: 74,
+              stats: {
+                atq: 10,
+                def: 90
+              }
+            },
+            player10: {
+              position: 32,
+              stats: {
+                atq: 10,
+                def: 90
+              }
+            },
+            player11: {
+              position: 52,
+              stats: {
+                atq: 10,
+                def: 90
+              }
+            },
+          }
+        },
+        User2: {
+          score: 0,
+          players: {
+            player1: {
+              position: 49,
+              stats: {
+                atq: 10,
+                def: 90
               }
             },
             player2: {
@@ -130,10 +219,6 @@
             },
           }
         },
-        User2: {
-          score: 0,
-          player:[ ]
-        },
         playingUser: 1
       }
     },
@@ -141,7 +226,7 @@
 
       shoot() {
         this.checkIfGoal();
-        this.createTerrain(this.ball.position)
+        this.createTerrain(this.ball.position, this.User1.players, this.User2.players)
       },
 
       createEvent(description){
@@ -200,10 +285,10 @@
 
       dribble() {
         var posBallon = this.ball.position;
-        posBallon = this.checkLimiteTerrainBallon(posBallon);
+        //posBallon = this.checkLimiteTerrainBallon(posBallon);
         posBallon = this.tryDribble(posBallon)
         this.ball.position = posBallon
-        this.createTerrain(this.ball.position)
+        this.createTerrain(this.ball.position,this.User1.players, this.User2.players)
       },
 
       tryDribble(posBallon){
@@ -225,8 +310,8 @@
 
             const jsonData = {
               name: '',
-              isBallon: '',
-              isPlayer: '',
+              isBallon: 0,
+              isPlayer: 0,
               user1: {
                 player:{ },
                 isPlayer: 0
@@ -240,9 +325,9 @@
             jsonData.name = '' + x.toString() + y.toString() + '';
 
             if (posBallon.toString() === x.toString() + y.toString()) {
-              jsonData.isBallon = 'true'
+              jsonData.isBallon = 1
             } else {
-              jsonData.isBallon = 'false'
+              jsonData.isBallon = 0
             }
 
             let numberCurrentCell = x *10 + y;
@@ -250,12 +335,19 @@
             let posJoueurUser1 = _.findKey(posJoueursUser1, { 'position': numberCurrentCell });
             let posJoueurUser2 = _.findKey(posJoueursUser2, { 'position': numberCurrentCell });
 
-            console.log(posJoueurUser1, numberCurrentCell)
+
 
             if ( posJoueurUser1 !== undefined ){
               jsonData.user1.player = posJoueurUser1;
               jsonData.user1.isPlayer = 1;
+              jsonData.isPlayer = 1
             }
+            if ( posJoueurUser2 !== undefined ){
+              jsonData.user2.player = posJoueurUser1;
+              jsonData.user2.isPlayer = 1;
+              jsonData.isPlayer = 1
+            }
+
 
             this.terrain.push(jsonData);
           }
@@ -263,8 +355,7 @@
       },
 
       test(value) {
-        this.createTerrain(this.ball.position)
-        //console.log(this.terrain)
+        this.createTerrain(this.ball.position,this.User1.players, this.User2.players)
       },
 
       createBallon(posBallon) {
@@ -278,7 +369,7 @@
             break;
           case 50:
             return 44
-            this.changeplayingUser()
+            this.changePlayingUser()
             break;
           case 49:
             this.shoot()
@@ -286,16 +377,33 @@
         }
       },
 
-      changeplayingUser(){
+      changePlayingUser(){
         if(this.playingUser ===1){
           this.playingUser = 2
         }else{
           this.playingUser = 1
         }
+      },
+
+      reverseUserPlayers(players){
+          for( const p in players){
+              let player = players[p]
+              player.position = this.reversePosition(player.position)
+          }
+          return players
+      },
+
+      reversePosition(position){
+        let positionVerticale = parseInt(position.toString().substr(1,1))
+        let positionHorizontale = parseInt(position.toString().substr(0,1)) *10
+        positionVerticale = Math.abs(positionVerticale - 10)
+        position = positionHorizontale + positionVerticale
+        return position
       }
     },
     created() {
-      this.createTerrain(this.ball.position, this.User1.players,this.User2.players);
+      this.User2.players = this.reverseUserPlayers(this.User2.players)
+      this.createTerrain(this.ball.position, this.User1.players, this.User2.players);
     },
     computed: {
 
@@ -338,7 +446,8 @@
   }
 
   .isBallon{
-    background-image: url("./../assets/ball32.png");
+    justify-content: center;
+    cursor: pointer;
   }
   .isBallon1joueur{
     background-image: url("./../assets/ball24.png");
@@ -349,5 +458,13 @@
 
   .terrain {
     width: 400px;
+  }
+  .user1{
+    justify-content: center;
+    margin-top: 20%; /*temp*/
+  }
+  .user2{
+    justify-content: center;
+    transform: rotate(180deg);
   }
 </style>
