@@ -6,7 +6,7 @@ import Vuex from 'vuex'
 
 Vue.use(Vuex)
 
-const state = {
+const state = { // data
     events:[
         {
             id:34567878,
@@ -15,7 +15,7 @@ const state = {
     ]
 }
 
-const mutations = {
+const mutations = { // on ne modifie le state qu'ici
     CREATE_EVENT: ( state,description )=>{
         state.events.push({
             id: Math.floor(Math.random()*1000000000),
@@ -24,8 +24,14 @@ const mutations = {
     }
 }
 
-const getters = {
+const getters = { // permet de recup les data
     events: state => state.events
+}
+
+const actions = { // on appel les mutations. si besoin on peut faire les appels ajax ici
+    createEvent(store,description){
+        store.commit('CREATE_EVENT', description)
+    }
 }
 
 
@@ -33,9 +39,7 @@ let store = new Vuex.Store({
     state: state,
     mutations: mutations,
     getters: getters,
-    actions:{
-
-    },
+    actions: actions,
     strict: true
 })
 

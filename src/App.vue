@@ -1,14 +1,17 @@
 <template>
     <div id="app">
         <!--<img src="./assets/logo.png">-->
+        <navmenu></navmenu>
         <router-view></router-view>
     </div>
 </template>
 
 <script>
+    import Navmenu from './components/Navmenu'
     import Vuex from 'vuex'
     export default {
-        name: 'app'
+        name: 'app',
+        components: { Navmenu }
     }
 </script>
 

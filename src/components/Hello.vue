@@ -41,9 +41,7 @@
     export default {
         store: store,
         name: 'hello',
-        props: {
-
-        },
+        props: {},
         data() {
             return {
                 msg: 'Welcome to Your Vue.js App',
@@ -227,7 +225,9 @@
             }
         },
         methods: {
+            ...Vuex.mapActions({
 
+            }),
             shoot() {
                 this.checkIfGoal();
                 this.createTerrain(this.ball.position, this.User1.players, this.User2.players)
