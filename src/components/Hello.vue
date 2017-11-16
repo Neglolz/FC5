@@ -285,7 +285,6 @@
       checkIfPlayer(){
         if (this.playingUser === 1){
           let result = _.findKey(this.User1.players, {'position': this.ball.position});
-          console.log(this.ball.position)
           if(result === undefined){
               return false
           }else{
@@ -300,6 +299,24 @@
           }
         }
 
+      },
+
+      checkIfEnnemyPlayer(){
+        if (this.playingUser === 1){
+          let result = _.findKey(this.User2.players, {'position': this.ball.position});
+          if(result === undefined){
+            return false
+          }else{
+            return this.User2.players[result]
+          }
+        } else{
+          let result = _.findKey(this.User1.players, {'position': this.ball.position});
+          if(result === undefined){
+            return false
+          }else{
+            return this.User1.players[result]
+          }
+        }
       },
 
       pass(cible) {
@@ -345,14 +362,16 @@
       },
 
       tryDribble(posBallon){
+        // on regarde si un joueur adverse est situé sur la meme case
+        this.checkIfEnnemyPlayer()
+        // si oui on calcule si le dribble est réussi
+        // si non le dribble est réussi
+
+
+
         ( this.playingUser === 1 ) ? posBallon-- : posBallon++;
-
-        let goalEvent = {
-          id: Math.floor(Math.random() * 1000000000),
-          description: 'Dribble réussi'
-        }
+        this.createEvent('Dribble réussi')
         this.events.push(goalEvent)
-
         return posBallon
       },
 
@@ -407,6 +426,7 @@
       },
 
       test(value) {
+          this.checkIfPlayer()
         this.createTerrain(this.ball.position, this.User1.players, this.User2.players)
       },
 
