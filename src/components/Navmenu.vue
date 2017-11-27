@@ -3,7 +3,7 @@
         <div class="icon">
             <ul>
                 <li><a title="Home" href="#"><i class="fa fa-home "></i></a></li>
-                <li><a href="About"><i class="fa fa-search "></i></a></li>
+                <li><a href="About"><i class="glyphicon glyphicon-search"></i></a></li>
                 <li><a href="#"><i class="fa fa-edit "></i></a></li>
                 <li><a href="#"><i class="fa fa-cog "></i></a></li>
 
