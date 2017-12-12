@@ -1,12 +1,12 @@
 <template>
   <div class="container">
     <!--Navbar-->
-    <navbar position="top" className="indigo" name="Your Logo" href="#">
+    <navbar position="top" className="teal" name="FC5" href="#">
       <navbar-collapse>
         <navbar-nav>
-          <navbar-item href="#" :active="true">Home</navbar-item>
-          <navbar-item href="#">Features</navbar-item>
-          <navbar-item href="#">Pricing</navbar-item>
+          <navbar-item href="/" :active="true">Home</navbar-item>
+          <navbar-item href="/register">S'inscrire</navbar-item>
+          <navbar-item href="/login">Se connecter</navbar-item>
           <!-- Dropdown -->
           <navbar-item-dropdown label="Dropdown">
             <a class="dropdown-item" href="#">Action</a>
@@ -16,34 +16,34 @@
           <!-- </ul> -->
           <!-- Links -->
         </navbar-nav>
-        <!-- Search form -->
+          <!-- Search form -->
         <form class="form-inline">
           <input class="form-control mr-auto p-2" type="text" placeholder="Search" aria-label="Search">
         </form>
       </navbar-collapse>
-      <!-- Collapsible content -->
+        <!-- Collapsible content -->
     </navbar>
     <!--/.Navbar-->
   </div>
 </template>
 
 <script>
-  import Navbar from '@/bin/Navbar';
-  import NavbarItem from '@/bin/NavbarItem';
-  import NavbarItemDropdown from '@/bin/NavbarItemDropdown';
-  import NavbarNav from '@/bin/NavbarNav';
-  import NavbarCollapse from '@/bin/NavbarCollapse';
+import Navbar from '@/components/componentsScripts/Navbar';
+import NavbarItem from '@/components/componentsScripts/NavbarItem';
+import NavbarItemDropdown from '@/components/componentsScripts/NavbarItemDropdown';
+import NavbarNav from '@/components/componentsScripts/NavbarNav';
+import NavbarCollapse from '@/components/componentsScripts/NavbarCollapse';
 
-  export default {
-    name: 'NavbarPage',
-    components: {
-      Navbar,
-      NavbarItem,
-      NavbarItemDropdown,
-      NavbarNav,
-      NavbarCollapse
-    },
-  };
+export default {
+  name: 'NavbarPage',
+  components: {
+    Navbar,
+    NavbarItem,
+    NavbarItemDropdown,
+    NavbarNav,
+    NavbarCollapse
+  },
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

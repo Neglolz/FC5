@@ -5,6 +5,9 @@ import Vuex from 'vuex'
 import App from './App'
 import router from './router'
 
+import 'bootstrap/dist/css/bootstrap.css';
+import 'mdbootstrap/css/mdb.css';
+
 Vue.use(Vuex)
 Vue.config.productionTip = false
 

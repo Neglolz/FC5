@@ -31,6 +31,8 @@
     <div v-for="event in events">
       {{ event.description }}
     </div>
+    <a href="http://localhost:8082/findgame">FIND GAME</a>
+
   </div>
 </template>
 
