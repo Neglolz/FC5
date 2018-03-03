@@ -16,11 +16,15 @@
 
 <style>
     #app {
-        font-family: 'Avenir', Helvetica, Arial, sans-serif;
+        @import url('https://fonts.googleapis.com/css?family=Roboto');
+        font-family: Roboto;
+        font-style: normal;
+        font-weight: normal;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
         text-align: center;
         color: #2c3e50;
         margin-top: 60px;
+        height: 100% ;
     }
 </style>

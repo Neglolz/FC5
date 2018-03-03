@@ -3,6 +3,7 @@ import Router from "vue-router";
 //Routes
 import Hello from "@/components/Hello";
 import Field from "@/components/Field";
+import Homepage from "@/components/pages/Homepage";
 
 Vue.use(Router)
 
@@ -18,6 +19,11 @@ export default new Router({
       path: '/game',
       name: 'Game',
       component: Field
+    },
+    {
+      path: '/home',
+      name: 'Home',
+      component: Homepage
     }
   ]
 })
