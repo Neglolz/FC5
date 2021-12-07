@@ -15,7 +15,7 @@
         "css-loader": "^0.28.7",
         "font-awesome": "^4.3.0",
         "lodash": "^4.17.4",
-        "node-sass": "^4.6.1",
+        "node-sass": "^7.0.0",
         "sass-loader": "^6.0.6",
         "socket.io": "^2.0.4",
         "style-loader": "^0.13.1",
@@ -26,7 +26,7 @@
         "vuex": "^3.0.1"
     },
     "devDependencies": {
-        "node-sass": "^4.6.1",
+        "node-sass": "^7.0.0",
         "sass-loader": "^6.0.6",
         "autoprefixer": "^7.1.2",
         "babel-core": "^6.22.1",
