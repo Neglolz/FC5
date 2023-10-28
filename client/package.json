@@ -10,7 +10,7 @@
         "build": "node build/build.js"
     },
     "dependencies": {
-        "axios": "^0.18.0",
+        "axios": "^1.6.0",
         "bootstrap": "^3.3.7",
         "css-loader": "^0.28.7",
         "font-awesome": "^4.3.0",
